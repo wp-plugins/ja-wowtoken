@@ -90,9 +90,7 @@ class jaWowToken_widget extends WP_Widget {
 		} else {
 			$data = json_decode(get_option('jawowtokendata'), true);
 		}
-
 		return $data;
-
 	}
 
 	// Creating widget front-end
@@ -145,8 +143,6 @@ class jaWowToken_widget extends WP_Widget {
 			$region = 'NA';
 		}
 
-
-
 	// Widget admin form
 	?>
 <p>
@@ -168,8 +164,6 @@ class jaWowToken_widget extends WP_Widget {
 </p>
 <p>
 <label for="<?php echo $this->get_field_id( 'wtlink' ); ?>"><?php _e( 'Link WowToken.info : ' ); ?></label>
-
-<?php // Change this to a checkbox! ------------------------------------- ?>
 <select class="widefat" name="<?php echo $this->get_field_name('wtlink'); ?>" id="">
 	<option <?php echo ($instance['wtlink'] == 'true') ? 'selected ' : ''; ?>value="true">Yes</option>
 	<option <?php echo ($instance['wtlink'] == 'false') ? 'selected ' : ''; ?>value="false">No</option>
@@ -193,10 +187,46 @@ class jaWowToken_widget extends WP_Widget {
 add_action( 'widgets_init', function() {
 	register_widget( 'jaWowToken_widget' );
 });
- 
 
 add_action('wp_enqueue_scripts', function() {
 	wp_enqueue_style( 'myprefix-style', plugins_url('jawowtoken.css', __FILE__) );
+});
+
+add_action('activated_plugin', function() {
+	$feedData = wp_remote_get('https://wowtoken.info/wowtoken.json');
+
+	if ($feedData['response']['code'] == 200) {
+
+		$tmpData = json_decode($feedData['body']);
+		$tmpData = $tmpData->update;
+
+		$data = [
+			'NA' => $tmpData->NA->raw->buy,
+			'EU' => $tmpData->EU->raw->buy,
+			'CN' => $tmpData->CN->raw->buy,
+			'TW' => $tmpData->TW->raw->buy,
+			'KR' => $tmpData->KR->raw->buy
+		];
+
+		// Encode the data and save it out to the database.
+	} else {
+		$data = [
+			'NA' => '0',
+			'EU' => '0',
+			'CN' => '0',
+			'TW' => '0',
+			'KR' => '0'
+		];
+	}
+	$savedata = json_encode($data);
+	update_option('jawowtokendata', $savedata);
+	update_option('jawowtokentime', current_time('timestamp'));
+
+});
+
+add_action('deactivated_plugin', function() {
+	delete_option('jawowtokentime');
+	delete_option('jawowtokendata');
 });
 
 ?>
