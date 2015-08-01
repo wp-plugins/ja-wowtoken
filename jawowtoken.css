@@ -1,0 +1,15 @@
+.widget_jawowtoken_widget div.jawowtoken_text {
+	text-align: center;
+}
+
+.widget_jawowtoken_widget div.jawowtoken_price {
+	margin: 15px 0px;
+	text-align: center;
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+.widget_jawowtoken_widget div.jawowtoken_credit {
+	text-align: center;
+	font-size: 0.7em;
+}
