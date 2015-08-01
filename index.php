@@ -5,7 +5,7 @@ Description: WordPress Widget that shows the latest prices from <a href="http://
 Plugin URI: http://www.johnaldred.com/ja-wowtoken/
 Author: John Aldred
 Author URI: http://www.johnaldred.com/
-Version: 1.0
+Version: 1.0.1
 License: GPL2
 */
 
